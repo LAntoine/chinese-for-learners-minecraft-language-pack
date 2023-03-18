@@ -1,0 +1,18 @@
+{
+   "pack": {
+      "pack_format": 13,
+      "description": "Chinese for learners Resource Pack"
+   },
+   "language": {
+      "zh_ln": {
+         "name": "Chinese for learners",
+         "region": "learners",
+         "bidirectional": false
+      },
+	"zh_py": {
+         "name": "Chinese for learners (pinyin only)",
+         "region": "learners",
+         "bidirectional": false
+      }
+   }
+}
