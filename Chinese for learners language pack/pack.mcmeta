@@ -8,6 +8,11 @@
          "name": "Chinese for learners",
          "region": "learners",
          "bidirectional": false
+      },
+	"zh_py": {
+         "name": "Chinese for learners (pinyin only)",
+         "region": "learners",
+         "bidirectional": false
       }
    }
 }
