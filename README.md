@@ -17,7 +17,7 @@ Once the resource pack is enabled, the two languages will appear very low down i
 ## How to install
 - Open Minecraft
 - Go to **Options** -> **Ressource Packs** -> **Open Pack Folder** 
-- Dowload the (latest release)[https://github.com/LAntoine/chinese-for-learners-minecraft-language-pack/releases]
+- Dowload the [latest release](https://github.com/LAntoine/chinese-for-learners-minecraft-language-pack/releases)
 - Paste the downloaded zip file directly in the Pack Folder
 - Select **Chinese For Learners** in Minecraft
 - Go to **Language** and select one of the newly added languages
