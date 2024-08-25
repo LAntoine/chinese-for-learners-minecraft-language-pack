@@ -36,11 +36,12 @@ let getResourceFile fileName =
     let files = Directory.GetFiles(Path.Combine(path.Assets, "indexes"))
     let filePath = Seq.maxBy (fun file -> file) files
     let json = File.ReadAllText filePath
-    let index = JsonSerializer.Deserialize<Index> json
-    let fileHash = index.Objects[fileName].ToString()
-    let json = File.ReadAllText (Path.Combine(path.Assets, "objects", fileHash.Substring(0, 2)))
+    let options = JsonSerializerOptions(PropertyNameCaseInsensitive=true)
+    let index = JsonSerializer.Deserialize<Index>(json, options)
+    let fileHash = index.Objects[fileName].Hash.ToString()
+    let json = File.ReadAllText (Path.Combine(path.Assets, "objects", fileHash.Substring(0, 2), fileHash))
     let translations = JsonSerializer.Deserialize<LangFile> json
     translations
 
 
-getResourceFile "minecraft/lang/zh_cn.json"
+let chineseLanguageTranslations = getResourceFile "minecraft/lang/zh_cn.json"
