@@ -4,6 +4,7 @@ open System.IO
 open System.Text.Json
 // #r "nuget: CmlLib.Core"
 open CmlLib.Core
+open MinecraftTranslator.Domain
 
 let latestVersion =
     MinecraftLauncher().GetAllVersionsAsync().AsTask()
@@ -16,7 +17,7 @@ let latestVersion =
 /// Download Minecraft and return the path where it has been saved.
 let download =
     System.Net.ServicePointManager.DefaultConnectionLimit <- 256
-    let path = MinecraftPath()
+    let path = MinecraftPath(Path.Combine(Directory.GetCurrentDirectory(), "Minecraft"))
     printfn $"MinecraftPath: {path}"
     let launcher = MinecraftLauncher(path)
     launcher.ByteProgressChanged.Add(fun args -> printfn "%d bytes / %d bytes" args.ProgressedBytes args.TotalBytes)
@@ -29,9 +30,9 @@ type MinecraftObject = { Hash: string; Size: int }
 
 type Index = { Objects: Map<string,MinecraftObject> }
 
-type LangFile = Map<string,string>
 
-let getResourceFile fileName =
+
+let getTranslation fileName =
     let path = download
     let files = Directory.GetFiles(Path.Combine(path.Assets, "indexes"))
     let filePath = Seq.maxBy (fun file -> file) files
@@ -40,8 +41,6 @@ let getResourceFile fileName =
     let index = JsonSerializer.Deserialize<Index>(json, options)
     let fileHash = index.Objects[fileName].Hash.ToString()
     let json = File.ReadAllText (Path.Combine(path.Assets, "objects", fileHash.Substring(0, 2), fileHash))
-    let translations = JsonSerializer.Deserialize<LangFile> json
+    let translations = JsonSerializer.Deserialize<LanguageFile> json
     translations
-
-
-let chineseLanguageTranslations = getResourceFile "minecraft/lang/zh_cn.json"
+    

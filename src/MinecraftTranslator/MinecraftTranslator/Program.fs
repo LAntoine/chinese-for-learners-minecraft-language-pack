@@ -1,6 +1,6 @@
 
 [<EntryPoint>]
 let main args =
-    let minecraftPath = MinecraftDownloader.download
-    printfn "Minecraft path: %s" (minecraftPath.ToString())
+    let translation = MinecraftDownloader.getTranslation "minecraft/lang/zh_cn.json"
+    
     0
