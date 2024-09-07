@@ -10,5 +10,6 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="CmlLib.Core" Version="4.0.2" />
+    <PackageReference Include="CommandLineParser.FSharp" Version="2.9.1" />
   </ItemGroup>
 </Project>
