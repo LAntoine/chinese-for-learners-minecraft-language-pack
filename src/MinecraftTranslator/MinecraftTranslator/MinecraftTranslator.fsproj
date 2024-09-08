@@ -4,7 +4,9 @@
     <TargetFramework>net8.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Domain/Language.fs" />
     <Compile Include="Domain/LanguageFile.fs" />
+    <Compile Include="Domain/MinecraftVersion.fs" />
     <Compile Include="MinecraftDownloader.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
