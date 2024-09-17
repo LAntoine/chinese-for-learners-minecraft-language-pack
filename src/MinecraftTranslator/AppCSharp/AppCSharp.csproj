@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <RootNamespace>ConsoleApp1</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="CmlLib.Core.Commons" Version="4.0.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="CmlLib.Core">
+        <HintPath>..\..\..\..\..\home\codespace\.nuget\packages\cmllib.core\4.0.2\lib\netstandard2.0\CmlLib.Core.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
+</Project>
