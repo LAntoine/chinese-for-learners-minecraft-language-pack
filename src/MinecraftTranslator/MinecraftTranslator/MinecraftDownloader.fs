@@ -40,7 +40,7 @@ type Index = { Objects: Map<string,MinecraftObject> }
 
 
 
-let getTranslation fileName =
+let getLanguageFile fileName =
     let path = download()
     let files = Directory.GetFiles(Path.Combine(path.Assets, "indexes"))
     let filePath = Seq.maxBy (fun file -> file) files
@@ -49,6 +49,6 @@ let getTranslation fileName =
     let index = JsonSerializer.Deserialize<Index>(json, options)
     let fileHash = index.Objects[fileName].Hash.ToString()
     let json = File.ReadAllText (Path.Combine(path.Assets, "objects", fileHash.Substring(0, 2), fileHash))
-    let translations = JsonSerializer.Deserialize<LanguageFile> json
-    translations
+    let languageFile = JsonSerializer.Deserialize<LanguageFile> json
+    languageFile
     
