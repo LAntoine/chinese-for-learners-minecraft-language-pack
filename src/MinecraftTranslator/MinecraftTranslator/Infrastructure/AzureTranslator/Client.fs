@@ -22,9 +22,11 @@ module AzureTransliterator =
         let toScript = "Latn"
         let englishText = Map.keys file
         let translatedText =  Map.values file
-        let toTransliterate = TextTranslationTransliterateOptions(language, fromScript, toScript, translatedText)
-        let transliteration = client.Transliterate toTransliterate
-        let resultLanguageFile = Seq.zip englishText transliteration.Value
-                                |> Seq.map (fun (eng,trans) -> (eng,trans.Text)) 
+        let transliterations = Seq.chunkBySize 10 translatedText 
+                                |> Seq.map (fun textChunk -> TextTranslationTransliterateOptions(language, fromScript, toScript, textChunk))
+                                |> Seq.map (fun textChunk -> client.Transliterate textChunk) 
+                                |> Seq.collect (fun (response) -> response.Value) 
+        let resultLanguageFile = Seq.zip englishText transliterations
+                                |> Seq.map (fun (eng,trans) -> (eng,trans.Text))
                                 |> Map.ofSeq
         resultLanguageFile
