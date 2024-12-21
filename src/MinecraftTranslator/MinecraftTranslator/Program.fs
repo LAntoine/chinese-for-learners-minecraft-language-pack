@@ -1,6 +1,9 @@
 open CommandLine
 open MinecraftTranslator.Domain
 open MinecraftTranslator.Infrastructure
+open System.Text.Json
+open System.IO
+open System.Text
 
 let parseLanguage (language: string) =
   match language.ToLower() with
@@ -29,8 +32,13 @@ let runTranslateAndReturnExitCode (opts: TranslateOptions) =
     let version = parseVersion opts.version
     printfn "Translating Minecraft version %s to language %s" version (language.ToString())
     let languageFile = MinecraftDownloader.getLanguageFile "minecraft/lang/zh_cn.json"
-    let transliteration = AzureTransliterator.transliterateLanguageFile languageFile
-    // todo: Save transliteration
+    //let transliteration = AzureTransliterator.transliterateLanguageFile languageFile
+    printfn "%s" (languageFile["accessibility.onboarding.accessibility.button"])
+    let jsonOptions = JsonSerializerOptions()
+    jsonOptions.WriteIndented <- true 
+    let json = JsonSerializer.Serialize(languageFile, jsonOptions )
+    printfn "%s" json
+    File.WriteAllText($"../../../Chinese for learners language pack/assets/minecraft/lang/{language}.json", json, Encoding.UTF8)
     0
 
 let runListVersionstAndReturnExitCode (opts: ListVersionsOptions) = 
