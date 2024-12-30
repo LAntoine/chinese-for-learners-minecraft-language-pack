@@ -1,0 +1,50 @@
+name: Translate and commit
+
+on:
+  push:
+    branches:
+      - dev_automate
+  workflow_dispatch:
+
+jobs:
+  build-and-run:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        ref: ${{ github.head_ref }}
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+
+    - name: Restore dependencies
+      run: dotnet restore src/MinecraftTranslator/MinecraftTranslator/MinecraftTranslator.fsproj
+
+    - name: Build
+      run: dotnet build --no-restore src/MinecraftTranslator/MinecraftTranslator/MinecraftTranslator.fsproj
+
+    - name: Get minecraft version
+      run: |
+        VERSION=$(dotnet run --no-build --project src/MinecraftTranslator/MinecraftTranslator/MinecraftTranslator.fsproj list-versions --latest-only)
+        echo "minecraft_version=$VERSION" >> $GITHUB_ENV
+
+
+    - name: Translate to zh_ln
+      run: dotnet run --no-build --project src/MinecraftTranslator/MinecraftTranslator/MinecraftTranslator.fsproj translate --language zh_ln --version $VERSION
+      env:
+        AZURE_TRANSLATOR_KEY: ${{ secrets.AZURE_TRANSLATOR_KEY }}
+
+    - name: Translate to zh_py
+      run: dotnet run --no-build --project src/MinecraftTranslator/MinecraftTranslator/MinecraftTranslator.fsproj translate --language zh_py --version $VERSION
+      env:
+        AZURE_TRANSLATOR_KEY: ${{ secrets.AZURE_TRANSLATOR_KEY }}
+
+    - uses: stefanzweifel/git-auto-commit-action@v5
+      with:
+        file_pattern: '*.json'
+        branch: v${{env.minecraft_version}}
+        create_branch: true
+        commit_message: Version ${{env.minecraft_version}}
