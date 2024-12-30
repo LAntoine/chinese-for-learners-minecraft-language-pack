@@ -37,7 +37,7 @@ let runTranslateAndReturnExitCode (opts: TranslateOptions) =
     jsonOptions.WriteIndented <- true
     jsonOptions.Encoder <- Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping 
     let json = JsonSerializer.Serialize(languageFile, jsonOptions )
-    File.WriteAllText($"../../../Chinese for learners language pack/assets/minecraft/lang/{language}.json", json)
+    File.WriteAllText($"Chinese for learners language pack/assets/minecraft/lang/{language}.json", json)
     0
 
 let runListVersionstAndReturnExitCode (opts: ListVersionsOptions) = 
