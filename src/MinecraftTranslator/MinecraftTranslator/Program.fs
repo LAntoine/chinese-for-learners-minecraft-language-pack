@@ -30,15 +30,14 @@ type ListVersionsOptions = {
 let runTranslateAndReturnExitCode (opts: TranslateOptions) =
     let language = parseLanguage opts.language
     let version = parseVersion opts.version
-    printfn "Translating Minecraft version %s to language %s" version (language.ToString())
+    printfn $"Translating Minecraft version {version} to language {(language.ToString())}"
     let languageFile = MinecraftDownloader.getLanguageFile "minecraft/lang/zh_cn.json"
-    //let transliteration = AzureTransliterator.transliterateLanguageFile languageFile
-    printfn "%s" (languageFile["accessibility.onboarding.accessibility.button"])
+    let transliteration = AzureTransliterator.transliterateLanguageFile languageFile language
     let jsonOptions = JsonSerializerOptions()
-    jsonOptions.WriteIndented <- true 
-    let json = JsonSerializer.Serialize(languageFile, jsonOptions )
-    printfn "%s" json
-    File.WriteAllText($"../../../Chinese for learners language pack/assets/minecraft/lang/{language}.json", json, Encoding.UTF8)
+    jsonOptions.WriteIndented <- true
+    jsonOptions.Encoder <- Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping 
+    let json = JsonSerializer.Serialize(transliteration, jsonOptions )
+    File.WriteAllText($"../../../Chinese for learners language pack/assets/minecraft/lang/{language}.json", json)
     0
 
 let runListVersionstAndReturnExitCode (opts: ListVersionsOptions) = 
