@@ -19,11 +19,13 @@ jobs:
 
     - name: Zip the folder
       run: |
-        zip -r "Chinese.For.Learners.zip" Chinese\ for\ learners\ language\ pack/
+        cd "Chinese for learners language pack"
+        zip -r "../Chinese.For.Learners.zip" *
 
     - name: Release
       uses: softprops/action-gh-release@v2
       with:
         files: "Chinese.For.Learners.zip"
         name: ${{ inputs.release_name }}
-        token: ${{ inputs.tag_name }}
+        tag_name: ${{ inputs.tag_name }}
+        token: ${{ secrets.GITHUB_TOKEN }}

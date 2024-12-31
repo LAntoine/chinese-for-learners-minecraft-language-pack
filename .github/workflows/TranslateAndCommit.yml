@@ -1,10 +1,11 @@
 name: Translate and commit
 
 on:
-  push:
-    branches:
-      - dev_automate
   workflow_dispatch:
+    inputs:
+      minecraft_version:
+        description: 'Minecraft Version'
+        required: false
 
 jobs:
   build-and-run:
@@ -28,17 +29,21 @@ jobs:
 
     - name: Get minecraft version
       run: |
-        VERSION=$(dotnet run --no-build --project src/MinecraftTranslator/MinecraftTranslator/MinecraftTranslator.fsproj list-versions --latest-only)
+        if [ -z "${{ inputs.minecraft_version }}" ]; then
+          VERSION=$(dotnet run --no-build --project src/MinecraftTranslator/MinecraftTranslator/MinecraftTranslator.fsproj list-versions --latest-only)
+        else
+          VERSION=${{ inputs.minecraft_version }}
+        fi
         echo "minecraft_version=$VERSION" >> $GITHUB_ENV
 
 
     - name: Translate to zh_ln
-      run: dotnet run --no-build --project src/MinecraftTranslator/MinecraftTranslator/MinecraftTranslator.fsproj translate --language zh_ln --version $VERSION
+      run: dotnet run --no-build --project src/MinecraftTranslator/MinecraftTranslator/MinecraftTranslator.fsproj translate --language zh_ln --version ${{env.minecraft_version}}
       env:
         AZURE_TRANSLATOR_KEY: ${{ secrets.AZURE_TRANSLATOR_KEY }}
 
     - name: Translate to zh_py
-      run: dotnet run --no-build --project src/MinecraftTranslator/MinecraftTranslator/MinecraftTranslator.fsproj translate --language zh_py --version $VERSION
+      run: dotnet run --no-build --project src/MinecraftTranslator/MinecraftTranslator/MinecraftTranslator.fsproj translate --language zh_py --version ${{env.minecraft_version}}
       env:
         AZURE_TRANSLATOR_KEY: ${{ secrets.AZURE_TRANSLATOR_KEY }}
 
