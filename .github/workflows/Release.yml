@@ -1,10 +1,14 @@
 name: Release
 
 on:
-  push:
-    branches:
-      - dev_automate
   workflow_dispatch:
+    inputs:
+      release_name:
+        description: 'Release name'
+        required: true
+      tag_name:
+        description: 'Tag name'
+        required: true
 
 jobs:
   release:
@@ -13,17 +17,13 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Get last commit message
-      run: echo "COMMIT_MESSAGE=$(git log -1 --pretty=%B)" >> $GITHUB_ENV
-
     - name: Zip the folder
       run: |
-        zip -r "${{ env.COMMIT_MESSAGE }}.zip" Chinese\ for\ learners\ language\ pack/
+        zip -r "Chinese.For.Learners.zip" Chinese\ for\ learners\ language\ pack/
 
-    - name: Create a Release
-      uses: elgohr/Github-Release-Action@v5
-      env:
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Release
+      uses: softprops/action-gh-release@v2
       with:
-        title: "Release ${{ github.ref }}"
-        workdir: "Chinese for learners language pack"
+        files: "Chinese.For.Learners.zip"
+        name: ${{ inputs.release_name }}
+        token: ${{ inputs.tag_name }}
