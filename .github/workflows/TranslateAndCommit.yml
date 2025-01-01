@@ -35,19 +35,31 @@ jobs:
           VERSION=${{ inputs.minecraft_version }}
         fi
         echo "minecraft_version=$VERSION" >> $GITHUB_ENV
-
+      
+    - name: Check if branch exists
+      run: |
+        if git ls-remote --heads origin | grep -q "refs/heads/v${{env.minecraft_version}}"; then
+          echo "Branch v${{env.minecraft_version}} already exists. Aborting workflow."
+          echo "branch_already_exists=true" >> $GITHUB_ENV
+        else
+          echo "Branch v${{env.minecraft_version}} does not exist. Continuing workflow."
+          echo "branch_already_exists=false" >> $GITHUB_ENV
+        fi
 
     - name: Translate to zh_ln
+      if: env.branch_already_exists == 'false'
       run: dotnet run --no-build --project src/MinecraftTranslator/MinecraftTranslator/MinecraftTranslator.fsproj translate --language zh_ln --version ${{env.minecraft_version}}
       env:
         AZURE_TRANSLATOR_KEY: ${{ secrets.AZURE_TRANSLATOR_KEY }}
 
     - name: Translate to zh_py
+      if: env.branch_already_exists == 'false'
       run: dotnet run --no-build --project src/MinecraftTranslator/MinecraftTranslator/MinecraftTranslator.fsproj translate --language zh_py --version ${{env.minecraft_version}}
       env:
         AZURE_TRANSLATOR_KEY: ${{ secrets.AZURE_TRANSLATOR_KEY }}
-
+    
     - uses: stefanzweifel/git-auto-commit-action@v5
+      if: env.branch_already_exists == 'false'
       with:
         file_pattern: '*.json'
         branch: v${{env.minecraft_version}}
