@@ -32,11 +32,11 @@ let runTranslateAndReturnExitCode (opts: TranslateOptions) =
     let version = parseVersion opts.version
     printfn $"Translating Minecraft version {version} to language {(language.ToString())}"
     let languageFile = MinecraftDownloader.getLanguageFile "minecraft/lang/zh_cn.json"
-    //let transliteration = AzureTransliterator.transliterateLanguageFile languageFile language
+    let transliteration = AzureTransliterator.transliterateLanguageFile languageFile language
     let jsonOptions = JsonSerializerOptions()
     jsonOptions.WriteIndented <- true
     jsonOptions.Encoder <- Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping 
-    let json = JsonSerializer.Serialize(languageFile, jsonOptions )
+    let json = JsonSerializer.Serialize(transliteration, jsonOptions )
     File.WriteAllText($"Chinese for learners language pack/assets/minecraft/lang/{language}.json", json)
     0
 
