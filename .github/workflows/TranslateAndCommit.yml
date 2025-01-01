@@ -72,3 +72,4 @@ jobs:
       if: env.branch_already_exists == 'false'
       with:
         branch: v${{env.minecraft_version}}
+        base: master
