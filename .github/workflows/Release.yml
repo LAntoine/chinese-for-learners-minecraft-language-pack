@@ -1,0 +1,31 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_name:
+        description: 'Release name'
+        required: true
+      tag_name:
+        description: 'Tag name'
+        required: true
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Zip the folder
+      run: |
+        cd "Chinese for learners language pack"
+        zip -r "../Chinese.For.Learners.zip" *
+
+    - name: Release
+      uses: softprops/action-gh-release@v2
+      with:
+        files: "Chinese.For.Learners.zip"
+        name: ${{ inputs.release_name }}
+        tag_name: ${{ inputs.tag_name }}
+        token: ${{ secrets.GITHUB_TOKEN }}
