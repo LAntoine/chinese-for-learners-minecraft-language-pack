@@ -24,7 +24,7 @@ let getLatestVersion () =
 
 /// Download Minecraft and return the path where it has been saved.
 let download () =
-    System.Net.ServicePointManager.DefaultConnectionLimit <- 256
+    System.Net.ServicePointManager.DefaultConnectionLimit <- 10
     let path = MinecraftPath(Path.Combine(Directory.GetCurrentDirectory(), "Minecraft"))
     printfn $"MinecraftPath: {path}"
     let launcher = MinecraftLauncher(path)
