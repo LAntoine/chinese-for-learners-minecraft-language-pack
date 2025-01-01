@@ -65,3 +65,8 @@ jobs:
         branch: v${{env.minecraft_version}}
         create_branch: true
         commit_message: Version ${{env.minecraft_version}}
+
+    - name: Create Pull Request
+      uses: peter-evans/create-pull-request@v7
+      with:
+        branch: v${{env.minecraft_version}}
